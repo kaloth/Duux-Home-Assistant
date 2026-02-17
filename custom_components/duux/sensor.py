@@ -1,6 +1,7 @@
 """Support for Duux sensors."""
 from __future__ import annotations
 import logging
+import time
 
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -144,7 +145,7 @@ class DuuxErrorSensor(DuuxSensor):
             timestamp = time.mktime(time.strptime(timestamp, DUUX_DATETIME_FORMAT))
             
             if time.time() - timestamp > DUUX_API_FRESHNESS_CUTOFF:
-                return DUUX_ERRID.Stale_Device_Data
+                return DUUX_ERRID.Stale_Device_Data.name.replace('_', ' ')
         
         # Data is fresh so check for API error codes..
         return DUUX_ERRID(self.coordinator.data.get(self.entity_description.key)).name.replace('_', ' ')
