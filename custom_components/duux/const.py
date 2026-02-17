@@ -74,8 +74,18 @@ class DUUX_ERRID(Enum):
     Ice_Detected = 4
     Water_Tank_Full = 8
     
-    Unknown_Error=9999999
+    # Codes below this point are internal to this HA integration.
+    Stale_Device_Data = 9999998
+    Unknown_Error = 9999999
     
     @classmethod
     def _missing_(cls, value):
         return cls.Unknown_Error
+
+# API data 'freshness' cutoff in seconds. Set to 15 minutes.
+# If no new data has arrived from the device for this long then
+# an 'problem' will be flagged.
+DUUX_API_FRESHNESS_CUTOFF = 15 * 60
+
+# Format description for use with strptime and strftime.
+DUUX_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z"

@@ -86,4 +86,13 @@ class DuuxErrorSensor(DuuxBinarySensor):
 
     @property
     def is_on(self):
+        # First check if the data from the API is fresh. If not, could indicate
+        # the device is offline.
+        timestamp = self.coordinator.data.get('time')
+        timestamp = time.mktime(time.strptime(timestamp, DUUX_DATETIME_FORMAT))
+        
+        if time.time() - timestamp > DUUX_API_FRESHNESS_CUTOFF:
+            return True
+        
+        # Data is fresh so check for API error codes..
         return DUUX_ERRID(self.coordinator.data.get(self.entity_description.key)) != DUUX_ERRID.OK
